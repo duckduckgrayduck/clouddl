@@ -1,5 +1,4 @@
-# This file is an All-In-One module for downloading from cloud storage services
-# Supports share links from Google Drive & Dropbox. 
+""" This module allows you to download public files from Google Drive and Dropbox """ 
 import os
 import requests
 import zipfile
@@ -7,35 +6,51 @@ import patoolib
 from bs4 import BeautifulSoup
 import gdrivedl
 
-# define urls to filter cloud service
+# Define urls to filter by cloud service
 GDRIVE_URL = 'drive.google.com'
 DROPBOX_URL = 'dropbox.com'
 
-# Google drive folder link url downloader
 def download_folder(url, output_folder, filename=None):
+    """Download Google Drive folders"""
     dl = gdrivedl.GDriveDL(quiet=True, overwrite=False, mtimes=False)
     dl.process_url(url, output_folder, filename=None)
-
-# Google drive file link url downloader
+    
 def download_file(url, output_folder, filename):
+    """ Download Google Drive files"""
     dl = gdrivedl.GDriveDL(quiet=True, overwrite=False, mtimes=False)
     dl.process_url(url, output_folder, filename)
 
-# Gets file/folder title with requests
+def gd_download(url, directory):
+    """ Detects if url belongs to Google Drive folder or file and calls relavent function"""
+    if 'folder' in url:
+        output = get_title(url)[:-15]
+        output_path = directory + output
+        #print("---> Downloading to: " + output_path)
+        download_folder(url, output_path)
+    elif 'file' in url:
+        temp_output = get_title(url)[:-15]
+        output = temp_output.split('.', 1)[0]
+        #print("---> Downloading to: " + directory + temp_output)
+        download_file(url, directory, temp_output)
+        unzip(temp_output, output, directory)
+    else: 
+        print('The url: '+ url + ' is not supported, sorry.')
+
 def get_title(url):
+    """Gets file/folder title with requests library"""
     reqs = requests.get(url)
     soup = BeautifulSoup(reqs.text, 'html.parser')
     for title in soup.find_all('title'):
         return title.get_text()
-
-# Detects file compression type
+    
 def compression_type(file_name):
+    """ Detects file compression type"""
     ext = os.path.splitext(file_name)[-1].lower()
-    print(ext)
+    # print(ext)
     return ext
 
-# Uncompresses files and then deletes compressed folder
 def unzip(zipped_file, unzipped_file, directory):
+    """Uncompresses files and then deletes compressed folder"""
     if compression_type(zipped_file) == '.zip':
         zip_path = directory + zipped_file
         unzip_path = directory + unzipped_file
@@ -52,24 +67,8 @@ def unzip(zipped_file, unzipped_file, directory):
         os.remove(zip_path)
     return
 
-# Download from Google Drive
-def gd_download(url, directory):
-    if 'folder' in url:
-        output = get_title(url)[:-15]
-        output_path = directory + output
-        #print("---> Downloading to: " + output_path)
-        download_folder(url, output_path)
-    elif 'file' in url:
-        temp_output = get_title(url)[:-15]
-        output = temp_output.split('.', 1)[0]
-        #print("---> Downloading to: " + directory + temp_output)
-        download_file(url, directory, temp_output)
-        unzip(temp_output, output, directory)
-    else: 
-        print('The url: '+ url + ' is not supported, sorry.')
-
-# Download from Dropbox
 def db_download(url, directory):
+    """ Downloads files from Dropbox url"""
     url = url[:-1] + '0'
     file_name = get_title(url)[:-21][10:]
     #print(file_name)
@@ -88,8 +87,8 @@ def db_download(url, directory):
     if suffix1 or suffix2:
         unzip(file_name, output, directory)
 
-# Detects url cloud service type and downloads it to a specific location
 def grab(url, output_path):
+    """ Detects if url belongs to Google Drive or a Dropbox url and calls the relavent function"""
     if GDRIVE_URL in url:
         gd_download(url, output_path)
     if DROPBOX_URL in url:
