@@ -90,7 +90,7 @@ def db_download(url, directory):
 
 # Detects url cloud service type and downloads it to a specific location
 def grab(url, output_path):
-    if gdrive_url in url:
+    if GDRIVE_URL in url:
         gd_download(url, output_path)
-    if dropbox_url in url:
+    if DROPBOX_URL in url:
         db_download(url, output_path)
