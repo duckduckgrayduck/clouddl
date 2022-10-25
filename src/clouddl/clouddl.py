@@ -8,8 +8,8 @@ from bs4 import BeautifulSoup
 import gdrivedl
 
 # define urls to filter cloud service
-gdrive_url = 'drive.google.com'
-dropbox_url = 'dropbox.com'
+GDRIVE_URL = 'drive.google.com'
+DROPBOX_URL = 'dropbox.com'
 
 # Google drive folder link url downloader
 def download_folder(url, output_folder, filename=None):
