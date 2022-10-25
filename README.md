@@ -36,7 +36,7 @@ for url in download_list:
 ```python3
 from clouddl import dropbox_url, gdrive_url
 ```
-
+## Supported URLs
 Google Drive
 ```txt
 https://drive.google.com/drive/folders/...?usp=sharing
