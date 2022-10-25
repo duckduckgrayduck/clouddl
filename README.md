@@ -9,6 +9,11 @@ Downloader for Google Drive & DropBox
 - Auto extracts .rar files (requires 7zip)
 - Auto deletes compressed files after extraction
 
+## Installation 
+```console
+pip install clouddl
+```
+
 ## Usage
 ```python3
 from clouddl import grab
@@ -17,7 +22,7 @@ from clouddl import grab
 grab('https://drive.google.com/file/d/.../view?usp=sharing', './Downloads/')
 ```
 
-### Bulk Usage
+## Bulk Usage
 ```python3
 from clouddl import grab
 
@@ -26,10 +31,11 @@ download_list = ['URL1', 'URL2', 'URL3']
 for url in download_list:
  grab(url, './')
 ```
-Ensure the download location exists and ends with a "/" or it may cause issues. <br/>
-You can use "./" to download to the folder ClouddL is in.
 
-## Supported URLs
+## Variable Access
+```python3
+from clouddl import dropbox_url, gdrive_url
+```
 
 Google Drive
 ```txt
