@@ -35,6 +35,7 @@ def gd_download(url, directory):
         unzip(temp_output, output, directory)
     else: 
         print('The url: '+ url + ' is not supported, sorry.')
+        return False
 
 def get_title(url):
     """Gets file/folder title with requests library"""
@@ -93,3 +94,6 @@ def grab(url, output_path):
         gd_download(url, output_path)
     if DROPBOX_URL in url:
         db_download(url, output_path)
+        return True
+    else: 
+        return False
