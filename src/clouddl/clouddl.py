@@ -15,7 +15,7 @@ def download_folder(url, output_folder, filename=None):
     """Download Google Drive folders"""
     dl = gdrivedl.GDriveDL(quiet=True, overwrite=False, mtimes=False)
     dl.process_url(url, output_folder, filename=None)
-    
+
 def download_file(url, output_folder, filename):
     """ Download Google Drive files"""
     dl = gdrivedl.GDriveDL(quiet=True, overwrite=False, mtimes=False)
@@ -36,7 +36,7 @@ def gd_download(url, directory):
         download_file(url, directory, temp_output)
         unzip(temp_output, output, directory)
         return True
-    else: 
+    else:
         logging.warning(f"The url {url} is not supported")
         return False
 
@@ -46,7 +46,7 @@ def get_title(url):
     soup = BeautifulSoup(reqs.text, 'html.parser')
     for title in soup.find_all('title'):
         return title.get_text()
-    
+
 def compression_type(file_name):
     """ Detects file compression type"""
     ext = os.path.splitext(file_name)[-1].lower()
@@ -93,16 +93,16 @@ def db_download(url, directory):
 
 def grab(url, output_path):
     """ Detects if url belongs to Google Drive or a Dropbox url and calls the relavent function"""
-    logging.basicConfig(format='format='%(asctime)s:%(levelname)s:%(message)s')
+    logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s')
     if GDRIVE_URL in url:
         if (gd_download(url, output_path)): 
             return True
-        else: 
+        else:
             return False
     if DROPBOX_URL in url:
         if(db_download(url, output_path)):
             return True
         else: 
             return False
-    else: 
+    else:
         return False
