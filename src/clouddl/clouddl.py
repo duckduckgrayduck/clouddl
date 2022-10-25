@@ -13,12 +13,12 @@ dropbox_url = 'dropbox.com'
 
 # Google drive folder link url downloader
 def download_folder(url, output_folder, filename=None):
-    dl = gdrivedl.GDriveDL(quiet=False, overwrite=False, mtimes=False)
+    dl = gdrivedl.GDriveDL(quiet=True, overwrite=False, mtimes=False)
     dl.process_url(url, output_folder, filename=None)
 
 # Google drive file link url downloader
 def download_file(url, output_folder, filename):
-    dl = gdrivedl.GDriveDL(quiet=False, overwrite=False, mtimes=False)
+    dl = gdrivedl.GDriveDL(quiet=True, overwrite=False, mtimes=False)
     dl.process_url(url, output_folder, filename)
 
 # Gets file/folder title with requests
@@ -39,7 +39,7 @@ def unzip(zipped_file, unzipped_file, directory):
     if compression_type(zipped_file) == '.zip':
         zip_path = directory + zipped_file
         unzip_path = directory + unzipped_file
-        print('--> Extracting to: ' + unzip_path)
+        #print('--> Extracting to: ' + unzip_path)
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
                 zip_ref.extractall(unzip_path)
                 zip_ref.close()
@@ -47,7 +47,7 @@ def unzip(zipped_file, unzipped_file, directory):
     if compression_type(zipped_file) == '.rar':
         zip_path = directory + zipped_file
         unzip_path = directory + unzipped_file
-        print('---> Extracting to: ' + unzip_path)
+        #print('---> Extracting to: ' + unzip_path)
         patoolib.extract_archive(zip_path, outdir=directory)
         os.remove(zip_path)
     return
@@ -57,12 +57,12 @@ def gd_download(url, directory):
     if 'folder' in url:
         output = get_title(url)[:-15]
         output_path = directory + output
-        print("---> Downloading to: " + output_path)
+        #print("---> Downloading to: " + output_path)
         download_folder(url, output_path)
     elif 'file' in url:
         temp_output = get_title(url)[:-15]
         output = temp_output.split('.', 1)[0]
-        print("---> Downloading to: " + directory + temp_output)
+        #print("---> Downloading to: " + directory + temp_output)
         download_file(url, directory, temp_output)
         unzip(temp_output, output, directory)
     else: 
@@ -72,12 +72,12 @@ def gd_download(url, directory):
 def db_download(url, directory):
     url = url[:-1] + '0'
     file_name = get_title(url)[:-21][10:]
-    print(file_name)
+    #print(file_name)
     suffix1 = file_name.endswith(".zip")
     suffix2 = file_name.endswith(".rar")
     dl_url = url[:-1] + '1'
     filepath = directory + file_name
-    print("---> Downloading to: " + filepath)
+    #print("---> Downloading to: " + filepath)
     output = file_name[:-4]
     headers = {'user-agent': 'Wget/1.16 (linux-gnu)'}
     r = requests.get(dl_url, stream=True, headers=headers)
