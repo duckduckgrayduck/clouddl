@@ -2,6 +2,7 @@
 import os
 import requests
 import zipfile
+import logging 
 import patoolib
 from bs4 import BeautifulSoup
 import gdrivedl
@@ -25,16 +26,18 @@ def gd_download(url, directory):
     if 'folder' in url:
         output = get_title(url)[:-15]
         output_path = directory + output
-        #print("---> Downloading to: " + output_path)
+        logging.info(f"---> Downloading Google Drive folder to: {output_path}")
         download_folder(url, output_path)
+        return True
     elif 'file' in url:
         temp_output = get_title(url)[:-15]
         output = temp_output.split('.', 1)[0]
-        #print("---> Downloading to: " + directory + temp_output)
+        logging.info(f"---> Downloading Google Drive file to {directory + temp_output}")
         download_file(url, directory, temp_output)
         unzip(temp_output, output, directory)
+        return True
     else: 
-        print('The url: '+ url + ' is not supported, sorry.')
+        logging.warning(f"The url {url} is not supported")
         return False
 
 def get_title(url):
@@ -47,7 +50,6 @@ def get_title(url):
 def compression_type(file_name):
     """ Detects file compression type"""
     ext = os.path.splitext(file_name)[-1].lower()
-    # print(ext)
     return ext
 
 def unzip(zipped_file, unzipped_file, directory):
@@ -55,7 +57,7 @@ def unzip(zipped_file, unzipped_file, directory):
     if compression_type(zipped_file) == '.zip':
         zip_path = directory + zipped_file
         unzip_path = directory + unzipped_file
-        #print('--> Extracting to: ' + unzip_path)
+        logging.info(f"--> Extracting to: {unzip_path}")
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
                 zip_ref.extractall(unzip_path)
                 zip_ref.close()
@@ -63,7 +65,7 @@ def unzip(zipped_file, unzipped_file, directory):
     if compression_type(zipped_file) == '.rar':
         zip_path = directory + zipped_file
         unzip_path = directory + unzipped_file
-        #print('---> Extracting to: ' + unzip_path)
+        logging.info(f"---> Extracting to: {unzip_path}")
         patoolib.extract_archive(zip_path, outdir=directory)
         os.remove(zip_path)
     return
@@ -72,12 +74,12 @@ def db_download(url, directory):
     """ Downloads files from Dropbox url"""
     url = url[:-1] + '0'
     file_name = get_title(url)[:-21][10:]
-    #print(file_name)
+    logging.info(f"Dropbox file name: {file_name}")
     suffix1 = file_name.endswith(".zip")
     suffix2 = file_name.endswith(".rar")
     dl_url = url[:-1] + '1'
     filepath = directory + file_name
-    #print("---> Downloading to: " + filepath)
+    logging.info(f"Downloading dropbox file to: {filepath}")
     output = file_name[:-4]
     headers = {'user-agent': 'Wget/1.16 (linux-gnu)'}
     r = requests.get(dl_url, stream=True, headers=headers)
@@ -87,13 +89,20 @@ def db_download(url, directory):
                 f.write(chunk)
     if suffix1 or suffix2:
         unzip(file_name, output, directory)
+    return True
 
 def grab(url, output_path):
     """ Detects if url belongs to Google Drive or a Dropbox url and calls the relavent function"""
+    logging.basicConfig(format='format='%(asctime)s:%(levelname)s:%(message)s')
     if GDRIVE_URL in url:
-        gd_download(url, output_path)
+        if (gd_download(url, output_path)): 
+            return True
+        else: 
+            return False
     if DROPBOX_URL in url:
-        db_download(url, output_path)
-        return True
+        if(db_download(url, output_path)):
+            return True
+        else: 
+            return False
     else: 
         return False
