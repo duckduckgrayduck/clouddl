@@ -13,8 +13,8 @@ Downloader for Google Drive & DropBox
 ```python3
 import clouddl
 
-# grabdl.grab(url, downloads folder path)
-grabdl.grab('https://drive.google.com/file/d/.../view?usp=sharing', './Downloads/')
+# clouddl.grab(url, downloads folder path)
+clouddl.grab('https://drive.google.com/file/d/.../view?usp=sharing', './Downloads/')
 ```
 
 ### Bulk Usage
@@ -24,7 +24,7 @@ import clouddl
 download_list = ['URL1', 'URL2', 'URL3']
 
 for url in download_list:
- grabdl.grab(url, './')
+ clouddl.grab(url, './')
 ```
 Ensure the download location exists and ends with a "/" or it may cause issues. <br/>
 You can use "./" to download to the folder LootDL is in.
