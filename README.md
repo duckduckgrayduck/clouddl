@@ -11,7 +11,7 @@ Downloader for Google Drive & DropBox
 
 ## Usage
 ```python3
-from clouddl import *
+from clouddl import grab
 
 # grab(url, downloads folder path)
 grab('https://drive.google.com/file/d/.../view?usp=sharing', './Downloads/')
@@ -19,7 +19,7 @@ grab('https://drive.google.com/file/d/.../view?usp=sharing', './Downloads/')
 
 ### Bulk Usage
 ```python3
-from clouddl import *
+from clouddl import grab
 
 download_list = ['URL1', 'URL2', 'URL3']
 
