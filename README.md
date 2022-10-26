@@ -9,6 +9,11 @@ Downloader for Google Drive & DropBox
 - Auto extracts .rar files (requires 7zip)
 - Auto deletes compressed files after extraction
 
+## Requirements
+```console
+pip install requests patool bs4 gdrivedl
+```
+
 ## Installation 
 ```console
 pip install clouddl
