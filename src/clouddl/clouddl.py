@@ -11,6 +11,9 @@ import gdrivedl
 GDRIVE_URL = 'drive.google.com'
 DROPBOX_URL = 'dropbox.com'
 
+logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.ERROR)
+
+
 def download_folder(url, output_folder, filename=None):
     """Download Google Drive folders"""
     dl = gdrivedl.GDriveDL(quiet=True, overwrite=False, mtimes=False)
@@ -99,7 +102,7 @@ def grab(url, output_path):
         Detects if url belongs to Google Drive or a Dropbox url and calls the relevant method. 
         You may change logging level by changing ERROR to WARNING, INFO, or DEBUG(all logs).
     """
-    logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.ERROR)
+  
     if GDRIVE_URL in url:
         if (gd_download(url, output_path)):
             return True
