@@ -83,14 +83,18 @@ def db_download(url, directory):
     output = file_name[:-4]
     headers = {'user-agent': 'Wget/1.16 (linux-gnu)'}
     r = requests.get(dl_url, stream=True, headers=headers)
-    with open(filepath, 'wb') as f:
-        for chunk in r.iter_content(chunk_size=1024): 
-            if chunk:
-                f.write(chunk)
-    if suffix1 or suffix2:
-        unzip(file_name, output, directory)
-    return True
-
+    if r.status_code == 200:
+        with open(filepath, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=1024): 
+                if chunk:
+                    f.write(chunk)
+        if suffix1 or suffix2:
+            unzip(file_name, output, directory)
+        return True
+    else: 
+        return False
+        
+    
 def grab(url, output_path):
     """ Detects if url belongs to Google Drive or a Dropbox url and calls the relavent function"""
     logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s')
