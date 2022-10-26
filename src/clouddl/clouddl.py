@@ -1,8 +1,8 @@
-""" This module allows you to download public files from Google Drive and Dropbox """ 
+""" This module allows you to download public files from Google Drive and Dropbox """
 import os
 import requests
 import zipfile
-import logging 
+import logging
 import patoolib
 from bs4 import BeautifulSoup
 import gdrivedl
@@ -22,7 +22,7 @@ def download_file(url, output_folder, filename):
     dl.process_url(url, output_folder, filename)
 
 def gd_download(url, directory):
-    """ Detects if url belongs to Google Drive folder or file and calls relavent function"""
+    """ Detects if url belongs to Google Drive folder or file and calls relavent function """
     if 'folder' in url:
         output = get_title(url)[:-15]
         output_path = directory + output
@@ -37,23 +37,22 @@ def gd_download(url, directory):
         unzip(temp_output, output, directory)
         return True
     else:
-        logging.warning(f"The url {url} is not supported")
         return False
 
 def get_title(url):
-    """Gets file/folder title with requests library"""
+    """ Gets file/folder title with requests library """
     reqs = requests.get(url)
     soup = BeautifulSoup(reqs.text, 'html.parser')
     for title in soup.find_all('title'):
         return title.get_text()
 
 def compression_type(file_name):
-    """ Detects file compression type"""
+    """ Detects file compression type """
     ext = os.path.splitext(file_name)[-1].lower()
     return ext
 
 def unzip(zipped_file, unzipped_file, directory):
-    """Uncompresses files and then deletes compressed folder"""
+    """ Uncompresses files and then deletes compressed folder """
     if compression_type(zipped_file) == '.zip':
         zip_path = directory + zipped_file
         unzip_path = directory + unzipped_file
@@ -71,7 +70,7 @@ def unzip(zipped_file, unzipped_file, directory):
     return
 
 def db_download(url, directory):
-    """ Downloads files from Dropbox url"""
+    """ Downloads files from Dropbox URL """
     url = url[:-1] + '0'
     file_name = get_title(url)[:-21][10:]
     logging.info(f"Dropbox file name: {file_name}")
@@ -85,28 +84,34 @@ def db_download(url, directory):
     r = requests.get(dl_url, stream=True, headers=headers)
     if r.status_code == 200:
         with open(filepath, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=1024): 
+            for chunk in r.iter_content(chunk_size=1024):
                 if chunk:
                     f.write(chunk)
         if suffix1 or suffix2:
             unzip(file_name, output, directory)
         return True
-    else: 
+    else:
         return False
         
     
 def grab(url, output_path):
-    """ Detects if url belongs to Google Drive or a Dropbox url and calls the relavent function"""
-    logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s')
+    """
+        Detects if url belongs to Google Drive or a Dropbox url and calls the relevant method. 
+        You may change logging level by changing ERROR to WARNING, INFO, or DEBUG(all logs).
+    """
+    logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.ERROR)
     if GDRIVE_URL in url:
-        if (gd_download(url, output_path)): 
+        if (gd_download(url, output_path)):
             return True
         else:
+            logging.warning(f"The Google Drive URL {url} is not supported")
             return False
     if DROPBOX_URL in url:
         if(db_download(url, output_path)):
             return True
-        else: 
+        else:
+            logging.warning(f"The Dropbox URL {url} is not supported")
             return False
     else:
+        logging.warning(f"The URL {url} is not supported")
         return False
