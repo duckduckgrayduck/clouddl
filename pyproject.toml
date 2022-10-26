@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "clouddl"
-version = "0.0.6"
+version = "0.0.8"
 authors = [
   { name="duckduckgrayduck", email="sanjin+clouddl@muckrock.com" },
 ]
