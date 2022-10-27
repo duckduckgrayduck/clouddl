@@ -23,8 +23,15 @@ pip install clouddl
 ```python3
 from clouddl import grab
 
-# grab(url, downloads folder path)
+# grab(url, folder_path)
 grab('https://drive.google.com/file/d/.../view?usp=sharing', './Downloads/')
+```
+
+## Verbose
+```python3
+from clouddl import grab
+#grab(url, folder_path, quiet=False)
+grab('https://drive.google.com/file/d/.../view?usp=sharing', './Downloads/', quiet=False)
 ```
 
 ## Bulk Usage
