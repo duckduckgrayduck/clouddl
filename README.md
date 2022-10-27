@@ -46,7 +46,7 @@ for url in download_list:
 
 ## Variable Access
 ```python3
-from clouddl import dropbox_url, gdrive_url
+from clouddl import DROPBOX_URL, GDRIVE_URL
 ```
 ## Supported URLs
 Google Drive
