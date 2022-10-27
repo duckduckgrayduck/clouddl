@@ -11,32 +11,29 @@ import gdrivedl
 GDRIVE_URL = 'drive.google.com'
 DROPBOX_URL = 'dropbox.com'
 
-logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.ERROR)
-
-
-def download_folder(url, output_folder, filename=None):
+def download_folder(url, output_folder, silent, filename=None):
     """Download Google Drive folders"""
-    dl = gdrivedl.GDriveDL(quiet=True, overwrite=False, mtimes=False)
+    dl = gdrivedl.GDriveDL(quiet=silent, overwrite=False, mtimes=False)
     dl.process_url(url, output_folder, filename=None)
 
-def download_file(url, output_folder, filename):
+def download_file(url, output_folder, filename, silent):
     """ Download Google Drive files"""
-    dl = gdrivedl.GDriveDL(quiet=True, overwrite=False, mtimes=False)
+    dl = gdrivedl.GDriveDL(quiet=silent, overwrite=False, mtimes=False)
     dl.process_url(url, output_folder, filename)
 
-def gd_download(url, directory):
+def gd_download(url, directory, quiet):
     """ Detects if url belongs to Google Drive folder or file and calls relavent function """
     if 'folder' in url:
         output = get_title(url)[:-15]
         output_path = directory + output
         logging.info(f"---> Downloading Google Drive folder to: {output_path}")
-        download_folder(url, output_path)
+        download_folder(url, output_path, quiet)
         return True
     elif 'file' in url:
         temp_output = get_title(url)[:-15]
         output = temp_output.split('.', 1)[0]
         logging.info(f"---> Downloading Google Drive file to {directory + temp_output}")
-        download_file(url, directory, temp_output)
+        download_file(url, directory, temp_output, quiet)
         unzip(temp_output, output, directory)
         return True
     else:
@@ -97,14 +94,19 @@ def db_download(url, directory):
         return False
         
     
-def grab(url, output_path):
+def grab(url, output_path, quiet=True):
     """
         Detects if url belongs to Google Drive or a Dropbox url and calls the relevant method. 
-        You may change logging level by changing ERROR to WARNING, INFO, or DEBUG(all logs).
+        You may change logging level by calling grab with quiet=False).
     """
-  
+    if(quiet==True):
+        logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.WARNING)
+
+    else: 
+        logging.basicConfig(format='%(asctime)s:%(levelname)s:%(message)s', level=logging.INFO)
+
     if GDRIVE_URL in url:
-        if (gd_download(url, output_path)):
+        if (gd_download(url, output_path, quiet)):
             return True
         else:
             logging.warning(f"The Google Drive URL {url} is not supported")
