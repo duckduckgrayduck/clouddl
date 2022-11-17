@@ -16,6 +16,12 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+    "gdrivedl",
+    "bs4",
+    "patool",
+    "requests",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/duckduckgrayduck/clouddl"
