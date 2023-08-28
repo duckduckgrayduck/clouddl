@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling", "bs4", "patool", "requests", "gdrivedl"]
+requires = ["hatchling", "bs4", "patool", "requests", "gdrivedl-parallel"]
 build-backend = "hatchling.build"
 
 [project]
 name = "clouddl"
-version = "0.1.0"
+version = "0.1.1"
 authors = [
   { name="duckduckgrayduck", email="sanjin+clouddl@muckrock.com" },
 ]
