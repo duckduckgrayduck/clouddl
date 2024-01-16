@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "bs4", "patool", "requests", "gdrivedl-parallel"]
+requires = ["hatchling", "bs4", "patool", "requests", "gdrivedl"]
 build-backend = "hatchling.build"
 
 [project]
