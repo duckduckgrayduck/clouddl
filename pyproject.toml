@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling", "bs4", "patool", "requests", "gdrivedl"]
+requires = ["hatchling", "bs4", "patool", "requests"]
 build-backend = "hatchling.build"
 
 [project]
 name = "clouddl"
-version = "0.2.0"
+version = "0.5.0"
 authors = [
   { name="duckduckgrayduck", email="sanjin+clouddl@muckrock.com" },
 ]
@@ -17,7 +17,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "gdrivedl",
+    "googledrivedl",
     "bs4",
     "patool",
     "requests",

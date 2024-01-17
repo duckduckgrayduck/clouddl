@@ -5,7 +5,7 @@ import zipfile
 import logging
 import patoolib
 from bs4 import BeautifulSoup
-import gdrivedl
+import googledrivedl
 
 # Define urls to filter by cloud service
 GDRIVE_URL = 'drive.google.com'
@@ -13,25 +13,25 @@ DROPBOX_URL = 'dropbox.com'
 
 def download_folder(url, output_folder, silent, filename=None):
     """Download Google Drive folders"""
-    dl = gdrivedl.GDriveDL(quiet=silent, overwrite=False, mtimes=False)
-    dl.process_url(url, output_folder, filename=None)
+    dl = googledrivedl.GDriveDL(quiet=silent, overwrite=False, mtimes=False)
+    dl.process_url(url, output_folder, verbose=False, filename=None)
 
 def download_file(url, output_folder, filename, silent):
     """ Download Google Drive files"""
-    dl = gdrivedl.GDriveDL(quiet=silent, overwrite=False, mtimes=False)
-    dl.process_url(url, output_folder, filename)
+    dl = googledrivedl.GDriveDL(quiet=silent, overwrite=False, mtimes=False)
+    dl.process_url(url, output_folder, verbose=False, filename=filename)
 
 def gd_download(url, directory, quiet):
     """ Detects if url belongs to Google Drive folder or file and calls relavent function """
     if 'folder' in url:
-        output = get_title(url)[:-15]
+        output = get_title(url)[:-14]
         output_path = directory + output
         logging.info(f"---> Downloading Google Drive folder to: {output_path}")
         download_folder(url, output_path, quiet)
         return True
     elif 'file' in url:
-        temp_output = get_title(url)[:-15]
-        output = temp_output.split('.', 1)[0]
+        temp_output = get_title(url)[:-14]
+        output, _ = os.path.splitext(temp_output)
         logging.info(f"---> Downloading Google Drive file to {directory + temp_output}")
         download_file(url, directory, temp_output, quiet)
         unzip(temp_output, output, directory)
